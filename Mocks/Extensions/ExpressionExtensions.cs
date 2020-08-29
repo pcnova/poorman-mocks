@@ -12,24 +12,15 @@ namespace PoorMan.Mocks.Extensions
     using PoorMan.Mocks.Properties;
 
     /// <summary>
-    ///     Contains methods that extend the <see cref="object"/> type for the
-    ///     purposes of the <see cref="Mock"/> class.
+    ///     Contains methods that extend the <see cref="Expression"/> type for
+    ///     the purposes of the <see cref="Mock"/> class.
     /// </summary>
-    internal static class ObjectExtensions
+    internal static class ExpressionExtensions
     {
         /// <summary>
         ///     Gets metadata for the member identified by the given expression,
         ///     if the member can be mocked.
         /// </summary>
-        /// <typeparam name="T">
-        ///     The type of object to work on. This does not need to be
-        ///     specified as it will be obtained through type inference.
-        /// </typeparam>
-        /// <param name="target">
-        ///     The object that is the target of this operation. This is not
-        ///     actually used but allows the method to work as an
-        ///     extension method.
-        /// </param>
         /// <param name="memberCall">
         ///     The lambda expression that calls (or accesses) the member whose
         ///     info will be obtained.
@@ -46,8 +37,8 @@ namespace PoorMan.Mocks.Extensions
         ///     An object containing information about the member specified in
         ///     <paramref name="memberCall"/>.
         /// </returns>
-        public static MemberInfo GetMockable<T>(
-            this T target, Expression<Action> memberCall)
+        public static MemberInfo GetMockable(
+            this Expression<Action> memberCall)
         {
             return ParseMockable(memberCall);
         }
@@ -57,18 +48,9 @@ namespace PoorMan.Mocks.Extensions
         ///     if the member can be mocked. Use this for expressions that take
         ///     a parameter.
         /// </summary>
-        /// <typeparam name="T">
-        ///     The type of object to work on. This does not need to be
-        ///     specified as it will be obtained through type inference.
-        /// </typeparam>
         /// <typeparam name="TParam">
         ///     The type of parameter that the specified member accepts.
         /// </typeparam>
-        /// <param name="target">
-        ///     The object that is the target of this operation. This is not
-        ///     actually used but allows the method to work as an
-        ///     extension method.
-        /// </param>
         /// <param name="memberCall">
         ///     The lambda expression that calls (or accesses) the member whose
         ///     info will be obtained.
@@ -85,8 +67,8 @@ namespace PoorMan.Mocks.Extensions
         ///     An object containing information about the member specified in
         ///     <paramref name="memberCall"/>.
         /// </returns>
-        public static MemberInfo GetMockable<T, TParam>(
-            this T target, Expression<Action<TParam>> memberCall)
+        public static MemberInfo GetMockable<TParam>(
+            this Expression<Action<TParam>> memberCall)
         {
             return ParseMockable(memberCall);
         }
@@ -96,20 +78,11 @@ namespace PoorMan.Mocks.Extensions
         ///     if the member can be mocked. Use this for expressions that return
         ///     a value.
         /// </summary>
-        /// <typeparam name="T">
-        ///     The type of object to work on. This does not need to be
-        ///     specified as it will be obtained through type inference.
-        /// </typeparam>
         /// <typeparam name="TResult">
         ///     The type of result returned by the member to work on. This does
         ///     not need to be specified as it will be obtained through
         ///     type inference.
         /// </typeparam>
-        /// <param name="target">
-        ///     The object that is the target of this operation. This is not
-        ///     actually used but allows the method to work as an extension
-        ///     method.
-        /// </param>
         /// <param name="memberCall">
         ///     The lambda expression that calls (or accesses) the member whose
         ///     information will be obtained.
@@ -126,8 +99,8 @@ namespace PoorMan.Mocks.Extensions
         ///     An object containing information about the member specified in
         ///     <paramref name="memberCall"/>.
         /// </returns>
-        public static MemberInfo GetMockable<T, TResult>(
-            this T target, Expression<Func<TResult>> memberCall)
+        public static MemberInfo GetMockable<TResult>(
+            this Expression<Func<TResult>> memberCall)
         {
             return ParseMockable(memberCall);
         }
@@ -138,19 +111,14 @@ namespace PoorMan.Mocks.Extensions
         ///     a parameter and return a value.
         /// </summary>
         /// <typeparam name="T">
-        ///     The type of object to work on. This does not need to be
-        ///     specified as it will be obtained through type inference.
+        ///     The type of parameter used by the member call. This does not need
+        ///     to be specified as it will be obtained through type inference.
         /// </typeparam>
         /// <typeparam name="TResult">
         ///     The type of result returned by the member to work on. This does
         ///     not need to be specified as it will be obtained through
         ///     type inference.
         /// </typeparam>
-        /// <param name="target">
-        ///     The object that is the target of this operation. This is not
-        ///     actually used but allows the method to work as an extension
-        ///     method.
-        /// </param>
         /// <param name="memberCall">
         ///     The lambda expression that calls (or accesses) the member whose
         ///     information will be obtained.
@@ -168,7 +136,7 @@ namespace PoorMan.Mocks.Extensions
         ///     <paramref name="memberCall"/>.
         /// </returns>
         public static MemberInfo GetMockable<T, TResult>(
-            this T target, Expression<Func<T, TResult>> memberCall)
+            this Expression<Func<T, TResult>> memberCall)
         {
             return ParseMockable(memberCall);
         }

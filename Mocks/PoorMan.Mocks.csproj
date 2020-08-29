@@ -46,7 +46,7 @@
     <Compile Include="BehaviorOptionsExtensions.cs" />
     <Compile Include="Extensions\IDictionaryExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
-    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Mock.cs" />
     <Compile Include="MockExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

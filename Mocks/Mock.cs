@@ -124,7 +124,7 @@ namespace PoorMan.Mocks
                         behavior();
                         return null;
                     },
-                this.GetMockable(memberCall).ToString());
+                memberCall.GetMockable().ToString());
 
             this.behaviors.AddOrUpdate(customBehavior.MemberName, customBehavior);
 
@@ -175,7 +175,7 @@ namespace PoorMan.Mocks
         {
             return this.SetBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg));
         }
 
@@ -214,7 +214,7 @@ namespace PoorMan.Mocks
         {
             return this.SetBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2));
         }
@@ -257,7 +257,7 @@ namespace PoorMan.Mocks
         {
             return this.SetBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3));
@@ -304,7 +304,7 @@ namespace PoorMan.Mocks
         {
             return this.SetBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3),
@@ -343,7 +343,7 @@ namespace PoorMan.Mocks
             // object, this allows us to use a single dictionary of behaviors.
             var customBehavior = new ReplacementBehavior(
                 args => behavior.Invoke(),
-                this.GetMockable(memberCall).ToString());
+                memberCall.GetMockable().ToString());
 
             this.behaviors.AddOrUpdate(customBehavior.MemberName, customBehavior);
 
@@ -386,7 +386,7 @@ namespace PoorMan.Mocks
         {
             return this.SetBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg));
         }
 
@@ -429,7 +429,7 @@ namespace PoorMan.Mocks
         {
             return this.SetBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2));
         }
@@ -476,7 +476,7 @@ namespace PoorMan.Mocks
         {
             return this.SetBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3));
@@ -527,7 +527,7 @@ namespace PoorMan.Mocks
         {
             return this.SetBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3),
@@ -568,7 +568,7 @@ namespace PoorMan.Mocks
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
                 args => behavior(),
-                this.GetMockable(memberCall).ToString());
+                memberCall.GetMockable().ToString());
 
             this.addedBehaviors
                 .AddOrUpdate(customBehavior.MemberName, customBehavior);
@@ -620,7 +620,7 @@ namespace PoorMan.Mocks
         {
             return this.AddBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg));
         }
 
@@ -659,7 +659,7 @@ namespace PoorMan.Mocks
         {
             return this.AddBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2));
         }
@@ -702,7 +702,7 @@ namespace PoorMan.Mocks
         {
             return this.AddBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3));
@@ -749,7 +749,7 @@ namespace PoorMan.Mocks
         {
             return this.AddBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3),
@@ -787,7 +787,7 @@ namespace PoorMan.Mocks
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
                 args => behavior(),
-                this.GetMockable(memberCall).ToString());
+                memberCall.GetMockable().ToString());
 
             this.addedBehaviors
                 .AddOrUpdate(customBehavior.MemberName, customBehavior);
@@ -831,7 +831,7 @@ namespace PoorMan.Mocks
         {
             return this.AddBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg));
         }
 
@@ -874,7 +874,7 @@ namespace PoorMan.Mocks
         {
             return this.AddBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2));
         }
@@ -921,7 +921,7 @@ namespace PoorMan.Mocks
         {
             return this.AddBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3));
@@ -972,7 +972,7 @@ namespace PoorMan.Mocks
         {
             return this.AddBehaviorWithArgs(
                 behavior,
-                this.GetMockable(memberCall),
+                memberCall.GetMockable(),
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3),
@@ -1030,7 +1030,7 @@ namespace PoorMan.Mocks
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
                 args => behavior(),
-                default(TMock).GetMockable(memberCall).ToString());
+                memberCall.GetMockable().ToString());
 
             this.addedBehaviors
                 .AddOrUpdate(customBehavior.MemberName, customBehavior);
@@ -1075,7 +1075,7 @@ namespace PoorMan.Mocks
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
                 args => behavior(),
-                default(TMock).GetMockable(memberCall).ToString());
+                memberCall.GetMockable().ToString());
 
             this.addedBehaviors
                 .AddOrUpdate(customBehavior.MemberName, customBehavior);
@@ -1130,7 +1130,7 @@ namespace PoorMan.Mocks
         {
             return this.AddBehaviorWithArgs(
                 behavior,
-                default(TMock).GetMockable(memberCall),
+                memberCall.GetMockable(),
                 orderedArgTypes);
         }
 
@@ -1172,7 +1172,7 @@ namespace PoorMan.Mocks
                         behavior();
                         return null;
                     },
-                default(TMock).GetMockable(memberCall).ToString());
+                memberCall.GetMockable().ToString());
 
             this.behaviors.AddOrUpdate(customBehavior.MemberName, customBehavior);
 
@@ -1217,7 +1217,7 @@ namespace PoorMan.Mocks
             // object, this allows us to use a single dictionary of behaviors.
             var customBehavior = new ReplacementBehavior(
                 args => behavior.Invoke(),
-                default(TMock).GetMockable(memberCall).ToString());
+                memberCall.GetMockable().ToString());
 
             this.behaviors.AddOrUpdate(customBehavior.MemberName, customBehavior);
 
@@ -1264,7 +1264,7 @@ namespace PoorMan.Mocks
         {
             return this.SetBehaviorWithArgs(
                 behavior,
-                default(TMock).GetMockable(memberCall),
+                memberCall.GetMockable(),
                 orderedArgTypes);
         }
 
@@ -1344,7 +1344,7 @@ namespace PoorMan.Mocks
                     behavior();
                     return null;
                 },
-                this.GetMockable(memberCall).ToString(),
+                memberCall.GetMockable().ToString(),
                 arguments);
         }
 
@@ -1386,7 +1386,7 @@ namespace PoorMan.Mocks
         {
             return this.RunCustomBehaviorOr(
                 args => behavior(),
-                this.GetMockable(memberCall).ToString(),
+                memberCall.GetMockable().ToString(),
                 arguments);
         }
 
