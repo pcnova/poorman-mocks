@@ -4,3 +4,12 @@
 # private event handlers, or in tests for hooking up a handler that does not use
 # event args. In those cases, a delegate is actually less noisy than a lambda.
 dotnet_diagnostic.SA1130.severity = suggestion
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_event = false:none
+dotnet_style_qualification_for_field = false:none
+dotnet_style_qualification_for_method = false:none
+dotnet_style_qualification_for_property = false:none
+
+# IDE0065: Misplaced using directive
+csharp_using_directive_placement = inside_namespace:silent
