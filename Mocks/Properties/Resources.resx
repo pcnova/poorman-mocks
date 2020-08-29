@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MockBehaviorArgumentMismatchError" xml:space="preserve">
+  <data name="BehaviorArgumentMismatch" xml:space="preserve">
     <value>The mock could not execute the custom behavior that was configured for the following operation: {0}. This is because the operation is being called with the wrong number or type of arguments. To fix this, make sure that:
 
 1) {1} is calling {2} with the same arguments passed to the operation, in the same order.
@@ -136,5 +136,14 @@
   </data>
   <data name="InvalidMemberExpression" xml:space="preserve">
     <value>The expression of type {0} does not identify a mockable member.</value>
+  </data>
+  <data name="GlobalMethodLocationHint" xml:space="preserve">
+    <value>To find this call (or calls), look for usages of this method: {0}. This seems to be a global method in a separate module... which is odd.</value>
+  </data>
+  <data name="PrivateMethodLocationHint" xml:space="preserve">
+    <value>This call is in {0}.</value>
+  </data>
+  <data name="PublicMethodLocationHint" xml:space="preserve">
+    <value>To find this call (or calls), look for usages of this method: {0}.{1}.</value>
   </data>
 </root>

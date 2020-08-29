@@ -1295,53 +1295,72 @@ namespace PoorMan.Mocks
         }
 
         /// <summary>
-        ///     Runs custom behavior set by a previous call to <see cref="AddBehavior"/>
-        ///     and/or <see cref="SetBehavior"/>, if any, otherwise runs the
-        ///     specified default behavior.
+        ///     Runs custom behavior set by a previous call to
+        ///     <see cref="AddBehavior"/> and/or <see cref="SetBehavior"/>, if
+        ///     any, otherwise runs the specified default behavior.
         /// </summary>
         /// <param name="behavior">
         ///     The default behavior to run if no custom behavior has been set
-        ///     for the given member.
+        ///     for the member.
         /// </param>
         /// <param name="memberCall">
-        ///     The expression that specifies the member whose behavior will
-        ///     be overridden.
+        ///     The expression that identifies the member where this is being
+        ///     called.
         /// </param>
         /// <param name="arguments">
-        ///     The arguments, if any, that were passed to the member being
-        ///     overridden, in the same order (see remarks for details). 
+        ///     The arguments accepted by the member where this is called, if
+        ///     any, and in the same order (see remarks).
         /// </param>
         /// <remarks>
         ///     <para>
-        ///     The <paramref name="arguments"/> are needed in order to pass
-        ///     them through to the custom behavior set for the overridden member.
-        ///     It's very important to pass the same arguments passed in the call
-        ///     to the member, and in the same order, otherwise the call will
-        ///     fail, or it will yield unexpected results.
+        ///     This method, or its overloads, should be called by any mock member
+        ///     that wants to allow custom behavior, otherwise calls to
+        ///     <see cref="AddBehavior"/> or <see cref="SetBehavior"/> will have
+        ///     no effect.
         ///     </para>
         ///     <para>
-        ///     Note that this means that, when the signature of the member
-        ///     changes, the <see cref="arguments"/> passed to this method may
-        ///     need to change as well. For most signature changes (add, remove,
-        ///     or a change to the type of an argument), either the compiler or
-        ///     a runtime error will provide an indication that the arguments
-        ///     passed to this method need to change.
+        ///     This should preferably be the only (direct) call within the
+        ///     member, and any logic to run by default should be within the
+        ///     <paramref name="behavior"/> delegate. Doing this allows adding
+        ///     to or completely replacing member behavior as expected by
+        ///     consumers.
         ///     </para>
         ///     <para>
-        ///     However, when the order is changed for arguments of the same type,
-        ///     there will be no compiler or runtime error, but the call will
-        ///     result in unexpected behavior. It is unfortunate that this can't
-        ///     be detected, because it will probably be annoying and difficult
-        ///     to debug, but it seems like something that should rarely happen,
-        ///     and that well-designed tests should catch. So, at least for now,
-        ///     it looks like the benefits (custom behavior being able to access
-        ///     arguments) outweigh the risks.
+        ///     The <paramref name="arguments"/> given will be passed straight
+        ///     through to custom behavior. It's important to pass the same
+        ///     arguments passed in the call to the member, and in the same
+        ///     order, otherwise calls will fail or yield unexpected results.
         ///     </para>
         ///     <para>
-        ///     See class remarks for more on the purpose and usage of this method.
+        ///     **Special note on member signature changes**:
+        ///     </para>
+        ///     <para>
+        ///     When the signature of the member where this is called changes,
+        ///     the passed <paramref name="arguments"/> will need to be manually
+        ///     changed as well.
+        ///     </para>
+        ///     <para>
+        ///     For most signature changes (add, remove, or change the type of
+        ///     an argument), either the compiler or the checks done by this
+        ///     class (see <see cref="Execute"/>) will provide a clear indication
+        ///     that the arguments need to change.
+        ///     </para>
+        ///     <para>
+        ///     However, when the *order* is changed for arguments of the *same*
+        ///     type, there will be no error from the compiler or the mock, but
+        ///     the call will most likely result in subtly unexpected behavior.
+        ///     </para>
+        ///     <para>
+        ///     It is unfortunate that this can't be easily detected, because it
+        ///     will probably be annoying and difficult to debug. This should
+        ///     hopefully not happen very often, but be aware that your only
+        ///     fallback in that case might be having well-designed tests.
         ///     </para>
         /// </remarks>
-        protected void RunCustomBehaviorOr(Action behavior, Expression<Action> memberCall, params object[] arguments)
+        protected void RunCustomBehaviorOr(
+            Action behavior,
+            Expression<Action> memberCall,
+            params object[] arguments)
         {
             // Wrap the given behavior in a function that returns null, this
             // allows us to re-use the overload.
@@ -1356,69 +1375,54 @@ namespace PoorMan.Mocks
         }
 
         /// <summary>
-        ///     Runs custom behavior set by a previous call to <see cref="AddBehavior"/>
-        ///     and/or <see cref="SetBehavior"/>, if any, otherwise runs the
-        ///     specified default behavior.
+        ///     Runs custom behavior set by a previous call to
+        ///     <see cref="AddBehavior"/> and/or <see cref="SetBehavior"/>, if
+        ///     any, otherwise runs the specified default behavior. Use this for
+        ///     members that return data.
         /// </summary>
         /// <typeparam name="TData">
         ///     The type of data returned by the member.
         /// </typeparam>
         /// <param name="behavior">
         ///     The default behavior to run if no custom behavior has been set
-        ///     for the given member.
+        ///     for the member.
         /// </param>
         /// <param name="memberCall">
-        ///     The expression that specifies the member whose behavior will
-        ///     be overridden.
+        ///     The expression that identifies the member where this is being
+        ///     called.
         /// </param>
         /// <param name="arguments">
-        ///     The arguments, if any, that were passed to the member being
-        ///     overridden, in the same order (see remarks for details). 
+        ///     The arguments accepted by the member where this is called, if
+        ///     any, and in the same order (see remarks).
         /// </param>
         /// <returns>
         ///     The data returned by the behavior.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     The <paramref name="arguments"/> are needed in order to pass
-        ///     them through to the custom behavior set for the overridden member.
-        ///     It's very important to pass the same arguments passed in the call
-        ///     to the member, and in the same order, otherwise the call will
-        ///     fail, or it will yield unexpected results.
-        ///     </para>
-        ///     <para>
-        ///     Note that this means that, when the signature of the member
-        ///     changes, the <see cref="arguments"/> passed to this method may
-        ///     need to change as well. For most signature changes (add, remove,
-        ///     or a change to the type of an argument), either the compiler or
-        ///     a runtime error will provide an indication that the arguments
-        ///     passed to this method need to change.
-        ///     </para>
-        ///     <para>
-        ///     However, when the order is changed for arguments of the same type,
-        ///     there will be no compiler or runtime error, but the call will
-        ///     result in unexpected behavior. It is unfortunate that this can't
-        ///     be detected, because it will probably be annoying and difficult
-        ///     to debug, but it seems like something that should rarely happen,
-        ///     and that well-designed tests should catch. So, at least for now,
-        ///     it looks like the benefits (custom behavior being able to access
-        ///     arguments) outweigh the risks.
-        ///     </para>
-        ///     <para>
-        ///     See class remarks for more on the purpose and usage of this method.
+        ///     See remarks on
+        ///     <see cref="RunCustomBehaviorOr(Action, Expression{Action}, object[])"/>
+        ///     for usage and other details.
         ///     </para>
         /// </remarks>
-        protected TData RunCustomBehaviorOr<TData>(Func<TData> behavior, Expression<Func<TData>> memberCall, params object[] arguments)
+        protected TData RunCustomBehaviorOr<TData>(
+            Func<TData> behavior,
+            Expression<Func<TData>> memberCall,
+            params object[] arguments)
         {
-            return this.RunCustomBehaviorOr(args => behavior(), this.GetMockable(memberCall).ToString(), arguments);
+            return this.RunCustomBehaviorOr(
+                args => behavior(),
+                this.GetMockable(memberCall).ToString(),
+                arguments);
         }
 
         /// <summary>
-        ///     Validates that the given argument values match the given argument
-        ///     information.
+        ///     Validates that a behavior's arguments match specified argument
+        ///     metadata.
         /// </summary>
         /// <param name="arguments">
-        ///     The arguments to be validated against the <paramref name="orderedArgTypes"/>.
+        ///     The arguments to be validated against the
+        ///     <paramref name="orderedArgTypes"/>.
         /// </param>
         /// <param name="orderedArgTypes">
         ///     The <see cref="Type"/> objects representing each argument required
@@ -1430,22 +1434,25 @@ namespace PoorMan.Mocks
         ///     types, and if each argument matches one of the types, in the order
         ///     specified by the lists; <c>false</c> otherwise.
         /// </returns>
-        private static bool ValidateBehaviorArguments(object[] arguments, params Type[] orderedArgTypes)
+        private static bool ValidateBehaviorArguments(
+            object[] arguments, params Type[] orderedArgTypes)
         {
-            // Make sure we have enough arguments to pair up with the given types,
-            // and then compare the types to ensure they match. Note that we ignore
-            // any arguments in excess of the required types, since that means the
-            // behavior has no use for them. Also, null is an allowed value for a
-            // reference type, so we must skip checking the type on that (which
-            // would fail too).
+            // Make sure we have enough arguments to pair up with the given
+            // types, and then compare the types to ensure they match. We ignore
+            // any arguments in excess of the required types, since that means
+            // the behavior has no use for them. Also, null should be allowed
+            // for reference types, so we must skip checking the type on that
+            // (which would fail too).
             return arguments.Length >= orderedArgTypes.Length &&
-                   orderedArgTypes.Select((t, i) => new
+                   orderedArgTypes
+                   .Select((t, i) => new
                    {
                        Type = t,
-                       Value = arguments[i]
+                       Value = arguments[i],
                    })
-                                  .All(arg => (arg.Value == null && !arg.Type.IsValueType) ||
-                                               arg.Type.IsInstanceOfType(arg.Value));
+                   .All(arg =>
+                       (arg.Value == null && !arg.Type.IsValueType) ||
+                        arg.Type.IsInstanceOfType(arg.Value));
         }
 
         /// <summary>
@@ -1481,34 +1488,38 @@ namespace PoorMan.Mocks
                 // the behavior would have to be a global method imported from
                 // VB.NET or something...
                 locationMsg =
-                    "To find this call (or calls), look for usages of this method: " +
-                    behavior.Method.Name +
-                    " (this seems to be a global method in a separate module... what are you doing?).";
+                    string.Format(
+                        Resources.GlobalMethodLocationHint, behavior.Method.Name);
             }
             else if (behavior.Method.DeclaringType.IsGenerated() ||
                      behavior.Method.IsPrivate)
             {
                 // This is an anonymous method or a private method in some class,
                 // so let's simply point to the class where this is defined.
-                locationMsg = "This call is in " + type.FullName + ".";
+                locationMsg =
+                    string.Format(
+                        Resources.PrivateMethodLocationHint, type.FullName);
             }
             else
             {
-                // This is a public method in some class, so we can't tell where
-                // this is being called from... provide the full type name so
-                // the caller can look for usages of the thing.
+                // This is a public method in some class, so we can't tell for
+                // sure where this is being called from... provide the full type
+                // name so the caller can look for usages of the thing.
                 locationMsg =
-                    "To find this call (or calls), look for usages of this method: " +
-                    (type.FullName + "." + behavior.Method.Name) + ".";
+                    string.Format(
+                        Resources.PublicMethodLocationHint,
+                        type.FullName,
+                        behavior.Method.Name);
             }
 
             return locationMsg;
         }
 
         /// <summary>
-        ///     Runs custom behavior set by a previous call to <see cref="AddBehavior"/>
-        ///     and/or <see cref="SetBehavior"/>, if any, otherwise runs the
-        ///     specified default behavior.
+        ///     Runs custom behavior set by a previous call to
+        ///     <see cref="AddBehavior"/> and/or <see cref="SetBehavior"/>, if
+        ///     any, otherwise runs the specified default behavior. This supports
+        ///     the non-private overloads.
         /// </summary>
         /// <typeparam name="TData">
         ///     The type of data returned by the member.
@@ -1518,20 +1529,28 @@ namespace PoorMan.Mocks
         ///     for the given member.
         /// </param>
         /// <param name="member">
-        ///     The member whose behavior will be overridden.
+        ///     The full name of the member for which behavior will be executed.
+        ///     This should be the same name used when setting custom behavior.
         /// </param>
         /// <param name="behaviorArgs">
         ///     The arguments to pass to the behavior to execute (that is, the
-        ///     same arguments passed by the original caller).
+        ///     same arguments accepted by the <paramref name="member"/>).
         /// </param>
         /// <returns>
-        ///     The data returned by the behavior.
+        ///     The data returned by the executed behavior.
         /// </returns>
         /// <remarks>
+        ///     <para>
         ///     This member is private to discourage hard-coding of member names.
-        ///     See class remarks for more on the purpose and usage of this method.
+        ///     See class-level remarks, and remarks on
+        ///     <see cref="RunCustomBehaviorOr(Action, Expression{Action}, object[])"/>
+        ///     for further details.
+        ///     </para>
         /// </remarks>
-        private TData RunCustomBehaviorOr<TData>(Func<object[], TData> behavior, string member, params object[] behaviorArgs)
+        private TData RunCustomBehaviorOr<TData>(
+            Func<object[], TData> behavior,
+            string member,
+            params object[] behaviorArgs)
         {
             // The behavior to execute instead of the default behavior (if any).
             ReplacementBehavior customBehavior;
@@ -1541,13 +1560,13 @@ namespace PoorMan.Mocks
             AddedBehavior addedBehavior;
             this.addedBehaviors.TryGetValue(member, out addedBehavior);
 
-            // Check whether we need to execute an added behavior.
+            // Check whether we need to execute added behavior first.
             if (addedBehavior != null && !addedBehavior.RunAfter)
             {
                 this.TryRun(addedBehavior, behaviorArgs);
             }
 
-            // Execute the custom behavior if we have one, otherwise the given
+            // Execute custom behavior if we have one, otherwise the given
             // default behavior.
             var result = customBehavior != null
                              ? this.TryRun<TData>(customBehavior, behaviorArgs)
@@ -1641,11 +1660,10 @@ namespace PoorMan.Mocks
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <param name="memberInfo">
-        ///     The object identifying the member being overridden with custom
+        ///     The object identifying the member being modified with custom
         ///     behavior.
         /// </param>
         /// <param name="orderedArgTypes">
@@ -1660,29 +1678,32 @@ namespace PoorMan.Mocks
         ///     <para>
         ///     This method is intended for use by the overloads of
         ///     <see cref="SetBehavior"/> and
-        ///     <see cref="SetBehaviorOf{TMock}(Expression{Action{TMock}},Action)"/>
-        ///     that allow passing call arguments to custom behavior. This avoids
-        ///     duplicating logic but also puts a strong onus on callers to ensure
-        ///     that the given <paramref name="orderedArgTypes"/> are correct
-        ///     for the given <paramref name="behavior"/> delegate, otherwise
+        ///     <see cref="SetBehaviorOf{TMock}(Expression{Action{TMock}}, Action)"/>
+        ///     that allow passing call arguments to custom behavior.
+        ///     </para>
+        ///     <para>
+        ///     Using this avoids duplicating logic but also puts a strong onus
+        ///     on callers to ensure the given <paramref name="orderedArgTypes"/>
+        ///     are correct for the given <paramref name="behavior"/>, otherwise
         ///     custom behavior will fail to execute through no fault of the user.
         ///     </para>
         ///     <para>
         ///     Note that it's OK if the member being overridden requires more
         ///     arguments than the ones actually defined for the custom behavior.
-        ///     That is, the custom behavior will execute successfully, with less
-        ///     arguments, as long as the arguments match the order and type of
-        ///     the arguments defined for the member (from left to right). This
-        ///     allows defining simpler custom behavior methods that can ignore
-        ///     arguments that they don't require. For more on this, see how
-        ///     <see cref="Execute"/> works.
+        ///     The custom behavior will execute successfully with less arguments,
+        ///     as long as they match the order and type of the arguments defined
+        ///     for the member (from left to right).
         ///     </para>
         ///     <para>
-        ///     See class remarks for more on the general purpose and design
-        ///     behind this method.
+        ///     This allows defining simpler custom behavior methods that can
+        ///     ignore arguments that they don't require. For more on this, see
+        ///     how <see cref="Execute"/> works.
         ///     </para>
         /// </remarks>
-        private ReplacementBehavior SetBehaviorWithArgs(Delegate behavior, MemberInfo memberInfo, params Type[] orderedArgTypes)
+        private ReplacementBehavior SetBehaviorWithArgs(
+            Delegate behavior,
+            MemberInfo memberInfo,
+            params Type[] orderedArgTypes)
         {
             // The object representing the behavior to replace.
             var customBehavior =
@@ -1703,16 +1724,11 @@ namespace PoorMan.Mocks
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <param name="memberInfo">
-        ///     The object identifying the member being overridden with custom
+        ///     The object identifying the member being modified with custom
         ///     behavior.
-        /// </param>
-        /// <param name="runAfter">
-        ///     The value indicating whether to run the behavior before or after
-        ///     the overridden member.
         /// </param>
         /// <param name="orderedArgTypes">
         ///     The <see cref="Type"/> objects representing each argument required
@@ -1727,28 +1743,18 @@ namespace PoorMan.Mocks
         ///     This method is intended for use by the overloads of
         ///     <see cref="AddBehavior"/> and
         ///     <see cref="AddBehaviorOf{TMock}(Expression{Action{TMock}},Action,bool)"/>
-        ///     that allow passing call arguments to custom behavior. This avoids
-        ///     duplicating logic but also puts a strong onus on callers to ensure
-        ///     that the given <paramref name="orderedArgTypes"/> are correct
-        ///     for the given <paramref name="behavior"/> delegate, otherwise
-        ///     custom behavior will fail to execute through no fault of the user.
+        ///     that allow passing call arguments to custom behavior.
         ///     </para>
         ///     <para>
-        ///     Note that it's OK if the member being overridden requires more
-        ///     arguments than the ones actually defined for the custom behavior.
-        ///     That is, the custom behavior will execute successfully, with less
-        ///     arguments, as long as the arguments match the order and type of
-        ///     the arguments defined for the member (from left to right). This
-        ///     allows defining simpler custom behavior methods that can ignore
-        ///     arguments that they don't require. For more on this, see how
-        ///     <see cref="Execute"/> works.
-        ///     </para>
-        ///     <para>
-        ///     See class remarks for more on the general purpose and design
-        ///     behind this method.
+        ///     See remarks on <see cref="SetBehaviorWithArgs"/> for additional
+        ///     design and usage information.
         ///     </para>
         /// </remarks>
-        private AddedBehavior AddBehaviorWithArgs(Delegate behavior, MemberInfo memberInfo, bool runAfter, params Type[] orderedArgTypes)
+        private AddedBehavior AddBehaviorWithArgs(
+            Delegate behavior,
+            MemberInfo memberInfo,
+            bool runAfter,
+            params Type[] orderedArgTypes)
         {
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
@@ -1756,7 +1762,8 @@ namespace PoorMan.Mocks
                 memberInfo.ToString(),
                 runAfter);
 
-            this.addedBehaviors.AddOrUpdate(customBehavior.MemberName, customBehavior);
+            this.addedBehaviors
+                .AddOrUpdate(customBehavior.MemberName, customBehavior);
 
             return customBehavior;
         }
@@ -1770,12 +1777,13 @@ namespace PoorMan.Mocks
         ///     The custom behavior to execute.
         /// </param>
         /// <param name="memberInfo">
-        ///     The information about the member that is being overridden by
-        ///     the given <paramref name="behavior"/>.
+        ///     The information about the member being modified by the given
+        ///     <paramref name="behavior"/>.
         /// </param>
         /// <param name="args">
         ///     The arguments to be passed to the <paramref name="behavior"/>.
-        ///     These will be validated against the <paramref name="orderedArgTypes"/>.
+        ///     These will be validated against the
+        ///     <paramref name="orderedArgTypes"/>.
         /// </param>
         /// <param name="orderedArgTypes">
         ///     The <see cref="Type"/> objects representing each argument required
@@ -1785,7 +1793,11 @@ namespace PoorMan.Mocks
         /// <returns>
         ///     The result returned by the <paramref name="behavior"/>.
         /// </returns>
-        private object Execute(Delegate behavior, MemberInfo memberInfo, object[] args, params Type[] orderedArgTypes)
+        private object Execute(
+            Delegate behavior,
+            MemberInfo memberInfo,
+            object[] args,
+            params Type[] orderedArgTypes)
         {
             if (!ValidateBehaviorArguments(args, orderedArgTypes))
             {
@@ -1797,7 +1809,9 @@ namespace PoorMan.Mocks
             // here would cause the dynamic invoke to fail.
             try
             {
-                return behavior.DynamicInvoke(args.Take(orderedArgTypes.Length).ToArray());
+                return
+                    behavior.DynamicInvoke(
+                        args.Take(orderedArgTypes.Length).ToArray());
             }
             catch (TargetInvocationException targetError)
             {
@@ -1821,21 +1835,23 @@ namespace PoorMan.Mocks
         ///     descriptive information about how to fix the error.
         /// </summary>
         /// <param name="memberName">
-        ///     The name of the member being overridden with custom behavior.
+        ///     The name of the member being modified with custom behavior.
         /// </param>
         /// <param name="behavior">
-        ///     The custom behavior that failed to execute because of bad arguments.
+        ///     The custom behavior that failed to execute because of bad
+        ///     arguments.
         /// </param>
         /// <exception cref="ArgumentException">
         ///     Thrown when this method is called, as specified in the summary.
         /// </exception>
-        private void ThrowBehaviorArgumentMismatchError(string memberName, Delegate behavior)
+        private void ThrowBehaviorArgumentMismatchError(
+            string memberName, Delegate behavior)
         {
             var mockName = this.GetType().Name;
 
             throw new ArgumentException(
                 string.Format(
-                        Resources.MockBehaviorArgumentMismatchError,
+                        Resources.BehaviorArgumentMismatch,
                         memberName,
                         mockName + "." + memberName,
                         nameof(this.RunCustomBehaviorOr),

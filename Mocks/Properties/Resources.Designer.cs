@@ -61,6 +61,28 @@ namespace PoorMan.Mocks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The mock could not execute the custom behavior that was configured for the following operation: {0}. This is because the operation is being called with the wrong number or type of arguments. To fix this, make sure that:
+        ///
+        ///1) {1} is calling {2} with the same arguments passed to the operation, in the same order.
+        ///
+        ///2) the call that sets custom behavior for {1}, is passing a method or lambda with the same signature as {0}. {3}.
+        /// </summary>
+        internal static string BehaviorArgumentMismatch {
+            get {
+                return ResourceManager.GetString("BehaviorArgumentMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To find this call (or calls), look for usages of this method: {0}. This seems to be a global method in a separate module... which is odd..
+        /// </summary>
+        internal static string GlobalMethodLocationHint {
+            get {
+                return ResourceManager.GetString("GlobalMethodLocationHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The behavior must be a delegate..
         /// </summary>
         internal static string InvalidBehaviorType {
@@ -79,19 +101,6 @@ namespace PoorMan.Mocks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The mock could not execute the custom behavior that was configured for the following operation: {0}. This is because the operation is being called with the wrong number or type of arguments. To fix this, make sure that:
-        ///
-        ///1) {1} is calling {2} with the same arguments passed to the operation, in the same order.
-        ///
-        ///2) the call that sets custom behavior for {1}, is passing a method or lambda with the same signature as {0}. {3}.
-        /// </summary>
-        internal static string MockBehaviorArgumentMismatchError {
-            get {
-                return ResourceManager.GetString("MockBehaviorArgumentMismatchError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A member-identifying expression must be provided..
         /// </summary>
         internal static string NoMemberExpression {
@@ -106,6 +115,24 @@ namespace PoorMan.Mocks.Properties {
         internal static string NullOrEmptyArgument {
             get {
                 return ResourceManager.GetString("NullOrEmptyArgument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This call is in {0}..
+        /// </summary>
+        internal static string PrivateMethodLocationHint {
+            get {
+                return ResourceManager.GetString("PrivateMethodLocationHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To find this call (or calls), look for usages of this method: {0}.{1}..
+        /// </summary>
+        internal static string PublicMethodLocationHint {
+            get {
+                return ResourceManager.GetString("PublicMethodLocationHint", resourceCulture);
             }
         }
     }
