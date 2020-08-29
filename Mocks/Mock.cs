@@ -10,7 +10,6 @@ namespace PoorMan.Mocks
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     using PoorMan.Mocks.Extensions;
     using PoorMan.Mocks.Properties;
@@ -564,13 +563,12 @@ namespace PoorMan.Mocks
         ///     </para>
         /// </remarks>
         public AddedBehavior AddBehavior(
-            Expression<Action> memberCall, Action behavior, bool runAfter = false)
+            Expression<Action> memberCall, Action behavior)
         {
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
                 args => behavior(),
-                this.GetMockable(memberCall).ToString(),
-                runAfter);
+                this.GetMockable(memberCall).ToString());
 
             this.addedBehaviors
                 .AddOrUpdate(customBehavior.MemberName, customBehavior);
@@ -618,13 +616,11 @@ namespace PoorMan.Mocks
         /// </remarks>
         public AddedBehavior AddBehavior<TArg>(
             Expression<Action> memberCall,
-            Action<TArg> behavior,
-            bool runAfter = false)
+            Action<TArg> behavior)
         {
             return this.AddBehaviorWithArgs(
                 behavior,
                 this.GetMockable(memberCall),
-                runAfter,
                 typeof(TArg));
         }
 
@@ -659,13 +655,11 @@ namespace PoorMan.Mocks
         /// </remarks>
         public AddedBehavior AddBehavior<TArg1, TArg2>(
             Expression<Action> memberCall,
-            Action<TArg1, TArg2> behavior,
-            bool runAfter = false)
+            Action<TArg1, TArg2> behavior)
         {
             return this.AddBehaviorWithArgs(
                 behavior,
                 this.GetMockable(memberCall),
-                runAfter,
                 typeof(TArg1),
                 typeof(TArg2));
         }
@@ -704,13 +698,11 @@ namespace PoorMan.Mocks
         /// </remarks>
         public AddedBehavior AddBehavior<TArg1, TArg2, TArg3>(
             Expression<Action> memberCall,
-            Action<TArg1, TArg2, TArg3> behavior,
-            bool runAfter = false)
+            Action<TArg1, TArg2, TArg3> behavior)
         {
             return this.AddBehaviorWithArgs(
                 behavior,
                 this.GetMockable(memberCall),
-                runAfter,
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3));
@@ -753,13 +745,11 @@ namespace PoorMan.Mocks
         /// </remarks>
         public AddedBehavior AddBehavior<TArg1, TArg2, TArg3, TArg4>(
             Expression<Action> memberCall,
-            Action<TArg1, TArg2, TArg3, TArg4> behavior,
-            bool runAfter = false)
+            Action<TArg1, TArg2, TArg3, TArg4> behavior)
         {
             return this.AddBehaviorWithArgs(
                 behavior,
                 this.GetMockable(memberCall),
-                runAfter,
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3),
@@ -792,14 +782,12 @@ namespace PoorMan.Mocks
         /// </remarks>
         public AddedBehavior AddBehavior<TData>(
             Expression<Func<TData>> memberCall,
-            Action behavior,
-            bool runAfter = false)
+            Action behavior)
         {
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
                 args => behavior(),
-                this.GetMockable(memberCall).ToString(),
-                runAfter);
+                this.GetMockable(memberCall).ToString());
 
             this.addedBehaviors
                 .AddOrUpdate(customBehavior.MemberName, customBehavior);
@@ -839,13 +827,11 @@ namespace PoorMan.Mocks
         /// </remarks>
         public AddedBehavior AddBehavior<TArg, TData>(
             Expression<Func<TData>> memberCall,
-            Action<TArg> behavior,
-            bool runAfter = false)
+            Action<TArg> behavior)
         {
             return this.AddBehaviorWithArgs(
                 behavior,
                 this.GetMockable(memberCall),
-                runAfter,
                 typeof(TArg));
         }
 
@@ -884,13 +870,11 @@ namespace PoorMan.Mocks
         /// </remarks>
         public AddedBehavior AddBehavior<TArg1, TArg2, TData>(
             Expression<Func<TData>> memberCall,
-            Action<TArg1, TArg2> behavior,
-            bool runAfter = false)
+            Action<TArg1, TArg2> behavior)
         {
             return this.AddBehaviorWithArgs(
                 behavior,
                 this.GetMockable(memberCall),
-                runAfter,
                 typeof(TArg1),
                 typeof(TArg2));
         }
@@ -933,13 +917,11 @@ namespace PoorMan.Mocks
         /// </remarks>
         public AddedBehavior AddBehavior<TArg1, TArg2, TArg3, TData>(
             Expression<Func<TData>> memberCall,
-            Action<TArg1, TArg2, TArg3> behavior,
-            bool runAfter = false)
+            Action<TArg1, TArg2, TArg3> behavior)
         {
             return this.AddBehaviorWithArgs(
                 behavior,
                 this.GetMockable(memberCall),
-                runAfter,
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3));
@@ -986,13 +968,11 @@ namespace PoorMan.Mocks
         /// </remarks>
         public AddedBehavior AddBehavior<TArg1, TArg2, TArg3, TArg4, TData>(
             Expression<Func<TData>> memberCall,
-            Action<TArg1, TArg2, TArg3, TArg4> behavior,
-            bool runAfter = false)
+            Action<TArg1, TArg2, TArg3, TArg4> behavior)
         {
             return this.AddBehaviorWithArgs(
                 behavior,
                 this.GetMockable(memberCall),
-                runAfter,
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3),
@@ -1044,15 +1024,13 @@ namespace PoorMan.Mocks
         /// </remarks>
         internal AddedBehavior AddBehaviorOf<TMock>(
             Expression<Action<TMock>> memberCall,
-            Action behavior,
-            bool runAfter)
+            Action behavior)
             where TMock : Mock
         {
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
                 args => behavior(),
-                default(TMock).GetMockable(memberCall).ToString(),
-                runAfter);
+                default(TMock).GetMockable(memberCall).ToString());
 
             this.addedBehaviors
                 .AddOrUpdate(customBehavior.MemberName, customBehavior);
@@ -1091,15 +1069,13 @@ namespace PoorMan.Mocks
         /// </remarks>
         internal AddedBehavior AddBehaviorOf<TMock, TData>(
             Expression<Func<TMock, TData>> memberCall,
-            Action behavior,
-            bool runAfter)
+            Action behavior)
             where TMock : Mock
         {
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
                 args => behavior(),
-                default(TMock).GetMockable(memberCall).ToString(),
-                runAfter);
+                default(TMock).GetMockable(memberCall).ToString());
 
             this.addedBehaviors
                 .AddOrUpdate(customBehavior.MemberName, customBehavior);
@@ -1149,14 +1125,12 @@ namespace PoorMan.Mocks
         internal AddedBehavior AddBehaviorOf<TMock>(
             Expression<Action<TMock>> memberCall,
             Delegate behavior,
-            bool runAfter,
             params Type[] orderedArgTypes)
             where TMock : Mock
         {
             return this.AddBehaviorWithArgs(
                 behavior,
                 default(TMock).GetMockable(memberCall),
-                runAfter,
                 orderedArgTypes);
         }
 
@@ -1553,12 +1527,10 @@ namespace PoorMan.Mocks
             params object[] behaviorArgs)
         {
             // The behavior to execute instead of the default behavior (if any).
-            ReplacementBehavior customBehavior;
-            this.behaviors.TryGetValue(member, out customBehavior);
+            this.behaviors.TryGetValue(member, out var customBehavior);
 
             // The behavior to execute along with any other behavior.
-            AddedBehavior addedBehavior;
-            this.addedBehaviors.TryGetValue(member, out addedBehavior);
+            this.addedBehaviors.TryGetValue(member, out var addedBehavior);
 
             // Check whether we need to execute added behavior first.
             if (addedBehavior != null && !addedBehavior.RunAfter)
@@ -1742,7 +1714,7 @@ namespace PoorMan.Mocks
         ///     <para>
         ///     This method is intended for use by the overloads of
         ///     <see cref="AddBehavior"/> and
-        ///     <see cref="AddBehaviorOf{TMock}(Expression{Action{TMock}},Action,bool)"/>
+        ///     <see cref="AddBehaviorOf{TMock}(Expression{Action{TMock}},Action)"/>
         ///     that allow passing call arguments to custom behavior.
         ///     </para>
         ///     <para>
@@ -1753,14 +1725,12 @@ namespace PoorMan.Mocks
         private AddedBehavior AddBehaviorWithArgs(
             Delegate behavior,
             MemberInfo memberInfo,
-            bool runAfter,
             params Type[] orderedArgTypes)
         {
             // The object representing the added behavior.
             var customBehavior = new AddedBehavior(
                 args => this.Execute(behavior, memberInfo, args, orderedArgTypes),
-                memberInfo.ToString(),
-                runAfter);
+                memberInfo.ToString());
 
             this.addedBehaviors
                 .AddOrUpdate(customBehavior.MemberName, customBehavior);

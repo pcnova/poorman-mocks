@@ -24,15 +24,10 @@ namespace PoorMan.Mocks
         ///     The name of the member being modified. This should be the
         ///     full name so it can be used to uniquely identify the member.
         /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run after the member being modified, <c>false</c>
-        ///     to run before.
-        /// </param>
         public AddedBehavior(
-            Action<object[]> behavior, string fullMemberName, bool runAfter)
+            Action<object[]> behavior, string fullMemberName)
             : base(behavior, fullMemberName)
         {
-            this.RunAfter = runAfter;
         }
 
         /// <summary>

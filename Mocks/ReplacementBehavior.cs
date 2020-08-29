@@ -15,18 +15,18 @@ namespace PoorMan.Mocks
     public class ReplacementBehavior : BehaviorOptions<Func<object[], object>>
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ReplacementBehavior"/> class.
+        ///     Initializes a new instance of the <see cref="ReplacementBehavior"/>
+        ///     class.
         /// </summary>
         /// <param name="behavior">
         ///     The behavior to run.
         /// </param>
         /// <param name="fullMemberName">
         ///     The name of the member being overridden. This should be the
-        ///     fully qualified name (i.e., what you get from calling
-        ///     <see cref="MemberInfo.ToString"/>) on a <see cref="MemberInfo"/>),
-        ///     so that it can be used to uniquely identify the member.
+        ///     full name so it can be used to uniquely identify the member.
         /// </param>
-        public ReplacementBehavior(Func<object[], object> behavior, string fullMemberName)
+        public ReplacementBehavior(
+            Func<object[], object> behavior, string fullMemberName)
             : base(behavior, fullMemberName)
         {
         }

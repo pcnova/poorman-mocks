@@ -16,7 +16,7 @@ namespace PoorMan.Mocks
     ///     This class simply provides convenience methods that wrap calls to
     ///     equivalent <see cref="Mock"/> methods. The methods pass an argument
     ///     representing the mock to the expressions that define the member to
-    ///     override.
+    ///     modify or override.
     ///     </para>
     ///     <para>
     ///     This is useful when you don't have a variable referencing the mock
@@ -25,17 +25,16 @@ namespace PoorMan.Mocks
     ///     behavior on it without saving it to a variable first.
     ///     </para>
     ///     <para>
-    ///     Another useful application is when you do have a variable to the mock,
-    ///     but the variable name is relatively long. By using the argument passed
-    ///     by these methods, expressions can shorten the argument name as desired,
-    ///     helping make statements more succinct.
+    ///     Another useful application is when you do have a variable to the
+    ///     mock, but the variable name is relatively long. By using the
+    ///     argument passed by these methods, expressions can shorten the
+    ///     argument name as desired, helping make statements more succinct.
     ///     </para>
     ///     <para>
     ///     See remarks on the <see cref="Mock"/> class for more info on what
     ///     a mock class needs to do to support the extension methods in this
     ///     class. Also see
-    ///     <see cref="Mock.AddBehaviorOf{TMock}(Expression{Action{TMock}},Action,bool)"/>
-    ///     and <see cref="Mock.SetBehaviorOf{TMock}(Expression{Action{TMock}},Action)"/>
+    ///     <see cref="Mock.AddBehaviorOf{TMock}(Expression{Action{TMock}},Action)"/>
     ///     for more on the reasoning behind these extensions.
     ///     </para>
     /// </remarks>
@@ -43,52 +42,45 @@ namespace PoorMan.Mocks
     {
         /// <summary>
         ///     Adds custom behavior to the specified member without replacing
-        ///     it (see remarks). Use this when you don't have a variable
-        ///     referencing the mock.
+        ///     it. Use this when you don't have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
-        ///     The type of object to operate on. This does not have to be
+        ///     The type of mock object to operate on. This does not have to be
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <param name="target">
-        ///     The object that is the target of the operation.
+        ///     The mock that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member.
         /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
-        /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior"/> and class-level
+        ///     remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
-                      Action behavior,
-                      bool runAfter = false) where TMock : Mock
+                      Expression<Action<TMock>> memberCall,
+                      Action behavior)
+            where TMock : Mock
         {
-            return target.AddBehaviorOf(callToMember, behavior, runAfter);
+            return target.AddBehaviorOf(memberCall, behavior);
         }
 
         /// <summary>
-        ///     Adds custom behavior to the specified member without replacing it,
-        ///     allowing one call argument to be used by the behavior (see remarks).
-        ///     Use this when you don't have a variable referencing the mock.
+        ///     Adds custom behavior to the specified member, allowing one call
+        ///     argument to be used by the behavior. Use this when you don't
+        ///     have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -99,45 +91,37 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
-        /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock, TArg>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
-                      Action<TArg> behavior,
-                      bool runAfter = false)
+                      Expression<Action<TMock>> memberCall,
+                      Action<TArg> behavior)
                 where TMock : Mock
         {
-            return target.AddBehaviorOf(callToMember, behavior, runAfter, typeof(TArg));
+            return target.AddBehaviorOf(memberCall, behavior, typeof(TArg));
         }
 
         /// <summary>
-        ///     Adds custom behavior to the specified member without replacing it,
-        ///     allowing two call arguments to be used by the behavior (see remarks).
-        ///     Use this when you don't have a variable referencing the mock.
+        ///     Adds custom behavior to the specified member, allowing two call
+        ///     arguments to be used by the behavior. Use this when you don't
+        ///     have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -151,45 +135,38 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
-        /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock, TArg1, TArg2>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
-                      Action<TArg1, TArg2> behavior,
-                      bool runAfter = false)
+                      Expression<Action<TMock>> memberCall,
+                      Action<TArg1, TArg2> behavior)
                 where TMock : Mock
         {
-            return target.AddBehaviorOf(callToMember, behavior, runAfter, typeof(TArg1), typeof(TArg2));
+            return target.AddBehaviorOf(
+                memberCall, behavior, typeof(TArg1), typeof(TArg2));
         }
 
         /// <summary>
-        ///     Adds custom behavior to the specified member without replacing it,
-        ///     allowing three call arguments to be used by the behavior (see remarks).
-        ///     Use this when you don't have a variable referencing the mock.
+        ///     Adds custom behavior to the specified member, allowing three call
+        ///     arguments to be used by the behavior. Use this when you don't
+        ///     have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -206,47 +183,38 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
-        /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock, TArg1, TArg2, TArg3>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
-                      Action<TArg1, TArg2, TArg3> behavior,
-                      bool runAfter = false)
+                      Expression<Action<TMock>> memberCall,
+                      Action<TArg1, TArg2, TArg3> behavior)
                 where TMock : Mock
         {
             return target.AddBehaviorOf(
-                callToMember, behavior, runAfter, typeof(TArg1), typeof(TArg2), typeof(TArg3));
+                memberCall, behavior, typeof(TArg1), typeof(TArg2), typeof(TArg3));
         }
 
         /// <summary>
-        ///     Adds custom behavior to the specified member without replacing it,
-        ///     allowing four call arguments to be used by the behavior (see
-        ///     remarks). Use this when you don't have a variable referencing the
-        ///     mock.
+        ///     Adds custom behavior to the specified member, allowing four call
+        ///     arguments to be used by the behavior. Use this when you don't
+        ///     have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -266,43 +234,33 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are
-        ///     required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
-        /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock, TArg1, TArg2, TArg3, TArg4>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
-                      Action<TArg1, TArg2, TArg3, TArg4> behavior,
-                      bool runAfter = false)
+                      Expression<Action<TMock>> memberCall,
+                      Action<TArg1, TArg2, TArg3, TArg4> behavior)
                 where TMock : Mock
         {
             return target.AddBehaviorOf(
-                callToMember,
+                memberCall,
                 behavior,
-                runAfter,
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3),
@@ -310,12 +268,12 @@ namespace PoorMan.Mocks
         }
 
         /// <summary>
-        ///     Adds custom behavior to the specified member without replacing
-        ///     it (see remarks). Use this when you don't have a variable
-        ///     referencing the mock, and for members that return a value.
+        ///     Adds custom behavior to the specified member. Use this when you
+        ///     don't have a variable referencing the mock, and for members that
+        ///     return a value.
         /// </summary>
         /// <typeparam name="TMock">
-        ///     The type of object to operate on. This does not have to be
+        ///     The type of mock object to operate on. This does not have to be
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <typeparam name="TData">
@@ -323,48 +281,42 @@ namespace PoorMan.Mocks
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <param name="target">
-        ///     The object that is the target of the operation.
+        ///     The mock that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member.
         /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
-        /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock, TData>(
                       this TMock target,
-                      Expression<Func<TMock, TData>> callToMember,
-                      Action behavior,
-                      bool runAfter = false) where TMock : Mock
+                      Expression<Func<TMock, TData>> memberCall,
+                      Action behavior)
+            where TMock : Mock
         {
-            return target.AddBehaviorOf(callToMember, behavior, runAfter);
+            return target.AddBehaviorOf(memberCall, behavior);
         }
 
         /// <summary>
-        ///     Adds custom behavior to the specified member without replacing
-        ///     it, allowing one call argument to be used by the behavior (see
-        ///     remarks). Use this when you don't have a variable referencing the
-        ///     mock, and for members that return a value.
+        ///     Adds custom behavior to the specified member, allowing one call
+        ///     argument to be used by the behavior. Use this when you don't have
+        ///     a variable referencing the mock, and for members that return a
+        ///     value.
         /// </summary>
         /// <typeparam name="TMock">
-        ///     The type of object to operate on. This does not have to be
+        ///     The type of mock object to operate on. This does not have to be
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <typeparam name="TArg">
@@ -375,50 +327,43 @@ namespace PoorMan.Mocks
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <param name="target">
-        ///     The object that is the target of the operation.
+        ///     The mock that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
-        /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock, TArg, TData>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
-                      Func<TArg, TData> behavior,
-                      bool runAfter = false) where TMock : Mock
+                      Expression<Action<TMock>> memberCall,
+                      Func<TArg, TData> behavior)
+            where TMock : Mock
         {
-            return target.AddBehaviorOf(callToMember, behavior, runAfter, typeof(TArg));
+            return target.AddBehaviorOf(memberCall, behavior, typeof(TArg));
         }
 
         /// <summary>
-        ///     Adds custom behavior to the specified member without replacing
-        ///     it, allowing two call arguments to be used by the behavior (see
-        ///     remarks). Use this when you don't have a variable referencing the
-        ///     mock, and for members that return a value.
+        ///     Adds custom behavior to the specified member, allowing two call
+        ///     arguments to be used by the behavior. Use this when you don't
+        ///     have a variable referencing the mock, and for members that return
+        ///     a value.
         /// </summary>
         /// <typeparam name="TMock">
-        ///     The type of object to operate on. This does not have to be
+        ///     The type of mock object to operate on. This does not have to be
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <typeparam name="TArg1">
@@ -432,50 +377,44 @@ namespace PoorMan.Mocks
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <param name="target">
-        ///     The object that is the target of the operation.
+        ///     The mock that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
-        /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock, TArg1, TArg2, TData>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
-                      Func<TArg1, TArg2, TData> behavior,
-                      bool runAfter = false) where TMock : Mock
+                      Expression<Action<TMock>> memberCall,
+                      Func<TArg1, TArg2, TData> behavior)
+            where TMock : Mock
         {
-            return target.AddBehaviorOf(callToMember, behavior, runAfter, typeof(TArg1), typeof(TArg2));
+            return target.AddBehaviorOf(
+                memberCall, behavior, typeof(TArg1), typeof(TArg2));
         }
 
         /// <summary>
-        ///     Adds custom behavior to the specified member without replacing
-        ///     it, allowing three call arguments to be used by the behavior (see
-        ///     remarks). Use this when you don't have a variable referencing the
-        ///     mock, and for members that return a value.
+        ///     Adds custom behavior to the specified member, allowing three call
+        ///     arguments to be used by the behavior. Use this when you don't
+        ///     have a variable referencing the mock, and for members that return
+        ///     a value.
         /// </summary>
         /// <typeparam name="TMock">
-        ///     The type of object to operate on. This does not have to be
+        ///     The type of mock object to operate on. This does not have to be
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <typeparam name="TArg1">
@@ -492,51 +431,44 @@ namespace PoorMan.Mocks
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <param name="target">
-        ///     The object that is the target of the operation.
+        ///     The mock that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
-        /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock, TArg1, TArg2, TArg3, TData>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
-                      Func<TArg1, TArg2, TArg3, TData> behavior,
-                      bool runAfter = false) where TMock : Mock
+                      Expression<Action<TMock>> memberCall,
+                      Func<TArg1, TArg2, TArg3, TData> behavior)
+            where TMock : Mock
         {
             return target.AddBehaviorOf(
-                callToMember, behavior, runAfter, typeof(TArg1), typeof(TArg2), typeof(TArg3));
+                memberCall, behavior, typeof(TArg1), typeof(TArg2), typeof(TArg3));
         }
 
         /// <summary>
-        ///     Adds custom behavior to the specified member without replacing
-        ///     it, allowing four call arguments to be used by the behavior (see
-        ///     remarks). Use this when you don't have a variable referencing the
-        ///     mock, and for members that return a value.
+        ///     Adds custom behavior to the specified member, allowing four call
+        ///     arguments to be used by the behavior. Use this when you don't
+        ///     have a variable referencing the mock, and for members that return
+        ///     a value.
         /// </summary>
         /// <typeparam name="TMock">
-        ///     The type of object to operate on. This does not have to be
+        ///     The type of mock object to operate on. This does not have to be
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <typeparam name="TArg1">
@@ -556,44 +488,35 @@ namespace PoorMan.Mocks
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <param name="target">
-        ///     The object that is the target of the operation.
+        ///     The mock that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are
-        ///     required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
-        /// </param>
-        /// <param name="runAfter">
-        ///     <c>True</c> to run the behavior after the specified member,
-        ///     <c>false</c> to run it before.
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
-        ///     The object representing the behavior that was added and its options.
+        ///     The object representing the added behavior and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.AddBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static AddedBehavior AddBehavior<TMock, TArg1, TArg2, TArg3, TArg4, TData>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
-                      Func<TArg1, TArg2, TArg3, TArg4, TData> behavior,
-                      bool runAfter = false) where TMock : Mock
+                      Expression<Action<TMock>> memberCall,
+                      Func<TArg1, TArg2, TArg3, TArg4, TData> behavior)
+            where TMock : Mock
         {
             return target.AddBehaviorOf(
-                callToMember,
+                memberCall,
                 behavior,
-                runAfter,
                 typeof(TArg1),
                 typeof(TArg2),
                 typeof(TArg3),
@@ -601,21 +524,19 @@ namespace PoorMan.Mocks
         }
 
         /// <summary>
-        ///     Replaces the specified member's behavior (see remarks). Use this
-        ///     when you don't have a variable referencing the mock.
+        ///     Replaces the specified member's behavior. Use this when you don't
+        ///     have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
-        ///     The type of object to operate on. This does not have to be
+        ///     The type of mock object to operate on. This does not have to be
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <param name="target">
-        ///     The object that is the target of the operation.
+        ///     The mock that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
@@ -626,23 +547,23 @@ namespace PoorMan.Mocks
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior"/> and class-level
+        ///     remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
+                      Expression<Action<TMock>> memberCall,
                       Action behavior)
                 where TMock : Mock
         {
-            return target.SetBehaviorOf(callToMember, behavior);
+            return target.SetBehaviorOf(memberCall, behavior);
         }
 
         /// <summary>
-        ///     Replaces the specified member's behavior, allowing one call argument
-        ///     to be used by the behavior (see remarks). Use this when you don't
-        ///     have a variable referencing the mock.
+        ///     Replaces the specified member's behavior, allowing one call
+        ///     argument to be used by the custom behavior. Use this when you
+        ///     don't have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -653,40 +574,37 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
         ///     The object representing the behavior that was set and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock, TArg>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
+                      Expression<Action<TMock>> memberCall,
                       Action<TArg> behavior)
                 where TMock : Mock
         {
-            return target.SetBehaviorOf(callToMember, behavior, typeof(TArg));
+            return target.SetBehaviorOf(memberCall, behavior, typeof(TArg));
         }
 
         /// <summary>
-        ///     Replaces the specified member's behavior, allowing two call arguments
-        ///     to be used by the behavior (see remarks). Use this when you don't
-        ///     have a variable referencing the mock.
+        ///     Replaces the specified member's behavior, allowing two call
+        ///     arguments to be used by the custom behavior. Use this when you
+        ///     don't have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -700,40 +618,38 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
         ///     The object representing the behavior that was set and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock, TArg1, TArg2>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
+                      Expression<Action<TMock>> memberCall,
                       Action<TArg1, TArg2> behavior)
                 where TMock : Mock
         {
-            return target.SetBehaviorOf(callToMember, behavior, typeof(TArg1), typeof(TArg2));
+            return target.SetBehaviorOf(
+                memberCall, behavior, typeof(TArg1), typeof(TArg2));
         }
 
         /// <summary>
-        ///     Replaces the specified member's behavior, allowing three call arguments
-        ///     to be used by the behavior (see remarks). Use this when you don't
-        ///     have a variable referencing the mock.
+        ///     Replaces the specified member's behavior, allowing three call
+        ///     arguments to be used by the custom behavior. Use this when you
+        ///     don't have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -750,39 +666,37 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
         ///     The object representing the behavior that was set and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock, TArg1, TArg2, TArg3>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
+                      Expression<Action<TMock>> memberCall,
                       Action<TArg1, TArg2, TArg3> behavior)
                 where TMock : Mock
         {
-            return target.SetBehaviorOf(callToMember, behavior, typeof(TArg1), typeof(TArg2), typeof(TArg3));
+            return target.SetBehaviorOf(
+                memberCall, behavior, typeof(TArg1), typeof(TArg2), typeof(TArg3));
         }
 
         /// <summary>
         ///     Replaces the specified member's behavior, allowing four call
-        ///     arguments to be used by the behavior (see remarks). Use this when
+        ///     arguments to be used by the custom behavior. Use this when
         ///     you don't have a variable referencing the mock.
         /// </summary>
         /// <typeparam name="TMock">
@@ -803,36 +717,32 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are
-        ///     required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
         ///     The object representing the behavior that was set and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock, TArg1, TArg2, TArg3, TArg4>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
+                      Expression<Action<TMock>> memberCall,
                       Action<TArg1, TArg2, TArg3, TArg4> behavior)
                 where TMock : Mock
         {
             return target.SetBehaviorOf(
-                callToMember,
+                memberCall,
                 behavior,
                 typeof(TArg1),
                 typeof(TArg2),
@@ -841,12 +751,12 @@ namespace PoorMan.Mocks
         }
 
         /// <summary>
-        ///     Replaces the specified member's behavior (see remarks). Use this
-        ///     when you don't have a variable referencing the mock, and for
-        ///     members that return a value.
+        ///     Replaces the specified member's behavior. Use this when you don't
+        ///     have a variable referencing the mock, and for members that return
+        ///     a value.
         /// </summary>
         /// <typeparam name="TMock">
-        ///     The type of object to operate on. This does not have to be
+        ///     The type of mock object to operate on. This does not have to be
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <typeparam name="TData">
@@ -854,13 +764,11 @@ namespace PoorMan.Mocks
         ///     specified as it will be obtained via type inference.
         /// </typeparam>
         /// <param name="target">
-        ///     The object that is the target of the operation.
+        ///     The mock that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
@@ -871,24 +779,24 @@ namespace PoorMan.Mocks
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock, TData>(
                       this TMock target,
-                      Expression<Func<TMock, TData>> callToMember,
+                      Expression<Func<TMock, TData>> memberCall,
                       Func<TData> behavior)
                 where TMock : Mock
         {
-            return target.SetBehaviorOf(callToMember, behavior);
+            return target.SetBehaviorOf(memberCall, behavior);
         }
 
         /// <summary>
-        ///     Replaces the specified member's behavior, allowing one call argument
-        ///     to be used by the behavior (see remarks). Use this when you don't
-        ///     have a variable referencing the mock, and for members that return
-        ///     a value.
+        ///     Replaces the specified member's behavior, allowing one call
+        ///     argument to be used by the custom behavior. Use this when you
+        ///     don't have a variable referencing the mock, and for members that
+        ///     return a value.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -902,41 +810,38 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
         ///     The object representing the behavior that was set and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock, TArg, TResult>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
+                      Expression<Action<TMock>> memberCall,
                       Func<TArg, TResult> behavior)
                 where TMock : Mock
         {
-            return target.SetBehaviorOf(callToMember, behavior, typeof(TArg));
+            return target.SetBehaviorOf(memberCall, behavior, typeof(TArg));
         }
 
         /// <summary>
-        ///     Replaces the specified member's behavior, allowing two call arguments
-        ///     to be used by the behavior (see remarks). Use this when you don't
-        ///     have a variable referencing the mock, and for members that return
-        ///     a value.
+        ///     Replaces the specified member's behavior, allowing two call
+        ///     arguments to be used by the custom behavior. Use this when you
+        ///     don't have a variable referencing the mock, and for members that
+        ///     return a value.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -953,41 +858,39 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
         ///     The object representing the behavior that was set and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock, TArg1, TArg2, TResult>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
+                      Expression<Action<TMock>> memberCall,
                       Func<TArg1, TArg2, TResult> behavior)
                 where TMock : Mock
         {
-            return target.SetBehaviorOf(callToMember, behavior, typeof(TArg1), typeof(TArg2));
+            return target.SetBehaviorOf(
+                memberCall, behavior, typeof(TArg1), typeof(TArg2));
         }
 
         /// <summary>
-        ///     Replaces the specified member's behavior, allowing three call arguments
-        ///     to be used by the behavior (see remarks). Use this when you don't
-        ///     have a variable referencing the mock, and for members that return
-        ///     a value.
+        ///     Replaces the specified member's behavior, allowing three call
+        ///     arguments to be used by the custom behavior. Use this when you
+        ///     don't have a variable referencing the mock, and for members that
+        ///     return a value.
         /// </summary>
         /// <typeparam name="TMock">
         ///     The type of mock object on which the method is operating.
@@ -1007,39 +910,37 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
         ///     The object representing the behavior that was set and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock, TArg1, TArg2, TArg3, TResult>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
+                      Expression<Action<TMock>> memberCall,
                       Func<TArg1, TArg2, TArg3, TResult> behavior)
                 where TMock : Mock
         {
-            return target.SetBehaviorOf(callToMember, behavior, typeof(TArg1), typeof(TArg2), typeof(TArg3));
+            return target.SetBehaviorOf(
+                memberCall, behavior, typeof(TArg1), typeof(TArg2), typeof(TArg3));
         }
 
         /// <summary>
         ///     Replaces the specified member's behavior, allowing four call
-        ///     arguments to be used by the behavior (see remarks). Use this when
+        ///     arguments to be used by the custom behavior. Use this when
         ///     you don't have a variable referencing the mock, and for members
         ///     that return a value.
         /// </summary>
@@ -1064,36 +965,32 @@ namespace PoorMan.Mocks
         /// <param name="target">
         ///     The mock object that is the target of the operation.
         /// </param>
-        /// <param name="callToMember">
+        /// <param name="memberCall">
         ///     The expression that specifies the member whose behavior will
-        ///     be overridden. This should be a simple call to a method or
-        ///     property. Note, however, that the member is not actually called;
-        ///     so it doesn't matter what parameters are passed (if any are
-        ///     required).
+        ///     be overridden (see remarks).
         /// </param>
         /// <param name="behavior">
         ///     The delegate that implements the desired behavior for the
         ///     specified member. This will be passed the original call
-        ///     arguments, so the signature must match the overridden member (see
-        ///     remarks for details).
+        ///     arguments (see remarks).
         /// </param>
         /// <returns>
         ///     The object representing the behavior that was set and its options.
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///     See the homologous method in the <see cref="Mock"/> class, and
-        ///     class-level remarks for more info.
+        ///     See remarks on <see cref="Mock.SetBehavior{T}(Expression{Action}, Action{T})"/>
+        ///     and class-level remarks for usage and other details.
         ///     </para>
         /// </remarks>
         public static ReplacementBehavior SetBehavior<TMock, TArg1, TArg2, TArg3, TArg4, TResult>(
                       this TMock target,
-                      Expression<Action<TMock>> callToMember,
+                      Expression<Action<TMock>> memberCall,
                       Func<TArg1, TArg2, TArg3, TArg4, TResult> behavior)
                 where TMock : Mock
         {
             return target.SetBehaviorOf(
-                callToMember,
+                memberCall,
                 behavior,
                 typeof(TArg1),
                 typeof(TArg2),
