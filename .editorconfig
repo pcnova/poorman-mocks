@@ -1,0 +1,6 @@
+﻿[*.cs]
+
+# SA1130: Use lambda syntax. Reason: delegates are used mostly for assigning empty
+# private event handlers, or in tests for hooking up a handler that does not use
+# event args. In those cases, a delegate is actually less noisy than a lambda.
+dotnet_diagnostic.SA1130.severity = suggestion

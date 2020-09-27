@@ -1,0 +1,5 @@
+# Visual Studio items
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user

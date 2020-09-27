@@ -1,0 +1,17 @@
+﻿{
+    "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+    "settings":
+    {
+        "documentationRules": {
+            "xmlHeader": false,
+            "copyrightText": "{headerDecorator}\nCopyright (c) {year} {userName}.\nLicensed under the {licenseName} license. See {licenseFile} for full information.\n{headerDecorator}",
+            "variables": {
+                "year": "2020",
+                "userName": "Paul C",
+                "licenseName": "MPL 2.0",
+                "licenseFile": "LICENSE.txt",
+                "headerDecorator": "-----------------------------------------------------------------------------"
+            }
+        }
+    }
+}
