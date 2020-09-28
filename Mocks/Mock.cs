@@ -87,6 +87,13 @@ namespace PoorMan.Mocks
                      new Dictionary<string, AddedBehavior>();
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="Mock"/> class.
+        /// </summary>
+        protected Mock()
+        {
+        }
+
+        /// <summary>
         ///     Replaces the specified member's behavior.
         /// </summary>
         /// <param name="memberCall">

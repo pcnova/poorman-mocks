@@ -10,17 +10,17 @@
     <Copyright>Copyright © 2020 Paul C</Copyright>
     <PackageLicenseFile></PackageLicenseFile>
     <PackageTags>mock mocking tdd testing unit-test unittest unit-testing unittesting</PackageTags>
-    <PackageReleaseNotes>Initial release for .NET Standard.</PackageReleaseNotes>
+    <PackageReleaseNotes>Included documentation and made Mock protection level consistent with how it's used.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/pcnova/poorman-mocks</PackageProjectUrl>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+      <Version>1.0.1</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DocumentationFile>bin\Debug\PoorMan.Mocks.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>bin\Release\PoorMan.Mocks.XML</DocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
