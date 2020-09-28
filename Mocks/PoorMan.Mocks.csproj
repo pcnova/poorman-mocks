@@ -3,12 +3,16 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
-    <Description>A library for creating simple mock objects for testing.</Description>
+    <Description>A minimalistic .NET library for testing with mocks.</Description>
     <Company />
     <Authors>Paul C</Authors>
-    <Product>PoorMan's Mocks</Product>
+    <Product>Poor Man's Mocks</Product>
     <Copyright>Copyright © 2020 Paul C</Copyright>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageLicenseFile></PackageLicenseFile>
+    <PackageTags>mock mocking tdd testing unit-test unittest unit-testing unittesting</PackageTags>
+    <PackageReleaseNotes>Initial release for .NET Standard.</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/pcnova/poorman-mocks</PackageProjectUrl>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DocumentationFile>bin\Debug\PoorMan.Mocks.XML</DocumentationFile>
@@ -26,10 +30,6 @@
     <AdditionalFiles Include="..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
-    <None Include="..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers">
