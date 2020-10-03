@@ -4,6 +4,9 @@ Poor Man's Mocks
 Intro
 -----
 
+> TL;DR: A thin library that lets you create and use your own mocks by learning
+>        just 3 methods.
+
 This is a small .NET library that makes it easier to implement mock objects for
 testing.
 
@@ -44,6 +47,8 @@ interface. There are essentially two steps to doing this:
 
 1. Implement the mock by deriving from the `Mock` class:
 
+   ````csharp
+   
        internal class MockMessenger : Mock, IMessenger
        {
            public string Hello()
@@ -51,10 +56,14 @@ interface. There are essentially two steps to doing this:
                return this.RunCustomBehaviorOr(() => "Howdy!", () => this.Hello());
            }
        }
+       
+   ````
 
 2. Use the class in a unit test:
 
 - This uses the mock as implemented:
+
+  ````csharp
 
       [TestMethod]
       public void TestGetGreeting()
@@ -69,7 +78,11 @@ interface. There are essentially two steps to doing this:
           Assert.AreEqual("Howdy!", greeting);
       }
 
+  ````
+
 - This uses the mock to do something besides its normal behavior:
+
+  ````csharp
 
       [TestMethod]
       public void TestHelloCalledOnce()
@@ -88,7 +101,11 @@ interface. There are essentially two steps to doing this:
           Assert.AreEqual(1, calls);
       }
 
+  ````
+
 - This uses the mock to completely override its normal behavior:
+
+  ````csharp
 
       [TestMethod]
       public void TestHelloWithDifferentGreeting()
@@ -106,11 +123,15 @@ interface. There are essentially two steps to doing this:
           Assert.AreEqual("Hey there!", greeting);
       }
 
+  ````
+
 - An interesting variation is a method that takes arguments. Assume there's a
   new `IMessenger.Hello(string name)` overload, and a corresponding method in
   `MessageConsumer` that takes a name as well.
 
   You would implement the method in `MockMessenger` like this:
+
+  ````csharp
 
       internal class MockMessenger : Mock, IMessenger
       {
@@ -125,8 +146,12 @@ interface. There are essentially two steps to doing this:
           }
       }
 
+  ````
+
   And then you'd be able to use the argument passed to `Hello(string)` when
   overriding the mock's behavior:
+
+  ````csharp
 
       [TestMethod]
       public void TestHelloWithName()
@@ -146,6 +171,7 @@ interface. There are essentially two steps to doing this:
           Assert.AreEqual("Hello World!", greeting);
       }
 
+  ````
 
 
 Details
@@ -270,3 +296,12 @@ Constraints
   to smell, i.e., the member should probably take an argument container object
   instead), but there is no technical reason why more arguments couldn't be
   supported in the future.
+
+
+
+Install
+-------
+
+Get the [nuget](https://www.nuget.org/packages/PoorMan.Mocks): `Install-Package PoorMan.Mocks -Version 1.0.1`
+
+You can also simply clone this and integrate into your project, of course.
